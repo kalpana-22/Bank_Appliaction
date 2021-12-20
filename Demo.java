@@ -1,65 +1,26 @@
 import java.util.*;
 
 class User{
-	
 	String name;
-	String id;
+	String NIC;
 	int date;
 	String month;
 	int year;
 	String address;
-	/*
-	public void insertName(){
-		System.out.println("Enter name: ");
-		this.name = scanner.nextLine();
-	}
-	public void insertId(){
-		System.out.println("Enter id: ");
-		this.id = scanner.nextLine();
-	}
-	public void insertDate(){
-		System.out.println("Enter date: ");
-		this.date = scanner.nextInt();
-	}
-	public void insertMonth(){
-		System.out.println("Enter month: ");
-		this.month = scanner.nextLine();
-	}
-	public void insertYear(){
-		System.out.println("Enter year: ");
-		this.year = scanner.nextInt();
-	}
-	public void insertAddress(){
-		System.out.println("Enter address: ");
-		this.address = scanner.nextLine();
-	}*/
 }
-class Account_Info extends User{
-	//User person;
+class Account extends User{
 	int min_amount = 1000;
 	int tot_amount;
 	int id;
 }
-class Account{
+class Bank{
 	
+	int acc_num = 1;
 	int count = 0;
-	Account_Info[] accounts = new Account_Info[0];
+	Account[] accounts = new Account[0];
 		
 	Scanner scanner = new Scanner(System.in);
 
-	/*public void isInteger(String s){
-		try {
-			int value = Integer.parseInt(s);
-			if(String.valueOf(value).length()==9){
-				System.out.println("NIC is in valid format");
-			}else{
-				System.out.println("NIC number length is incorrect");
-			}
-		}catch (NumberFormatException e) {
-			System.out.println("NIC is not valid format");
-		}
-	}*/
-	
 	public int amountPolicy(int amount){
 		if(amount<=1000){
 			System.out.print("Deposite Amount should be more than Rs.1000/= ");
@@ -70,35 +31,43 @@ class Account{
 		return amount;
 	}
 
+	//create Accout-> option 1:
 	public void createAccount(){		
+		Account acc = new Account();
 		System.out.print("Enter name: ");
-		String name = scanner.nextLine();
+		acc.name = scanner.nextLine();
+		
 		System.out.print("Enter date: ");
-		int date = scanner.nextInt();
+		acc.date = scanner.nextInt();
 		System.out.print("Enter month: ");
 		scanner.nextLine();
-		//System.out.print();
-		String month = scanner.nextLine();
-		//System.out.println();
+		acc.month = scanner.nextLine();
 		System.out.print("Enter year: ");
-		int year = scanner.nextInt();
+		acc.year = scanner.nextInt();
 		System.out.print("Enter address: ");
-		String address = scanner.nextLine();
 		scanner.nextLine();
+		acc.address = scanner.nextLine();
 		System.out.print("Deposite ammount: ");
-		int amount = scanner.nextInt();
-		amount = amountPolicy(amount);
+		acc.tot_amount = scanner.nextInt();
+		acc.tot_amount = amountPolicy(acc.tot_amount);
 		System.out.print("Enter NIC number: ");
 		scanner.nextLine();
-		String NIC = scanner.nextLine();
-		String[] arrOfStr = NIC.split("v");
+		acc.NIC = scanner.nextLine();
+		String[] arrOfStr = acc.NIC.split("v");
 
 		try {
 			int value = Integer.parseInt(arrOfStr[0]);
 			if(String.valueOf(value).length()==9){
-				System.out.println("NIC is in valid format");
+				System.out.println("NIC is valid format");
 				
-				
+				Account[] array = new Account[accounts.length+1];
+				for(int i=0; i<accounts.length; i++){
+					array[i] = accounts[0];
+				}
+				acc.id = acc_num++;
+				array[count++] = acc;
+				accounts = array;
+				System.out.println("Successfully added... "+accounts[accounts.length-1].id);
 				
 			}else{
 				System.out.println("NIC number length is incorrect. Try again..");
@@ -106,12 +75,195 @@ class Account{
 		}catch (NumberFormatException e) {
 			System.out.println("NIC is not valid format. Try again...");
 		}
+	
 	}
+	
+	//search account -> ID
+	public boolean searchAccountId(int a_id){
+		for(Account a1:accounts){
+			if(a_id==a1.id){
+				return true;
+			}
+		}
+		return false;
+	}
+	//search account -> NIC
+	public boolean searchAccountNIC(String nic){
+		for(Account a1:accounts){
+			if(nic.equalsIgnoreCase(a1.NIC)){
+				return true;
+			}
+		}
+		return false;
+	}
+	//print account numbers-> NIC
+	public void printAccountIds(String nic){
+		for(Account a1:accounts){
+			if(nic.equalsIgnoreCase(a1.NIC)){
+				//showAccoutId(nic);
+				System.out.println("Account Number: "+a1.id);
+			}
+		}
+		//System.out.println("Invalid NIC ");
+	}
+	//show account ids related to NIC
+	public void showAccoutId(Account a1){
+		System.out.println("Account Number: "+a1.id);
+	}
+	
+	//show data
+	public void showData(Account acc){
+		System.out.println("Account Number: "+acc.id);
+		System.out.println("Name: "+acc.name);
+		System.out.println("NIC : "+acc.NIC);
+		System.out.println("Ammount: "+acc.tot_amount);
+		System.out.println("Date Of Birth: "+acc.date+"/"+acc.month+"/"+acc.year);
+		System.out.println("Address : "+acc.address);	
+	}
+	
+	//check Account related to NIC-> option :
+	public void checkAccountUsingNIC(){
+		System.out.print("Enter NIC number > ");
+		scanner.nextLine();
+		String number = scanner.nextLine();
+		if(searchAccountNIC(number)){
+			printAccountIds(number);
+			//int i=0; 
+			//while(i<accounts.length){
+			//	if(accounts[i].id==number){
+			//		showData(accounts[i]);
+			//	}
+			//	i++;
+			//}
+		}else{
+			System.out.println("no account");
+		}		
+	}
+	
+	//check Account related to Account Id-> option 2:
+	public void checkAccountUsingId(){
+		System.out.print("Enter accout number > ");
+		int number = scanner.nextInt();
+		if(searchAccountId(number)){
+			int i=0; 
+			while(i<accounts.length){
+				if(accounts[i].id==number){
+					showData(accounts[i]);
+				}
+				i++;
+			}
+		}else{
+			System.out.println("no account");
+		}		
+	}
+	
+	
+	
 }
 
 class Demo{
+	
+	//clear code
+	public final static void clearConsole() { 
+		try {
+			final String os = System.getProperty("os.name"); 
+			if (os.contains("Windows")) {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			} else {
+				System.out.print("\033[H\033[2J"); 
+				System.out.flush();
+			}
+		} catch (final Exception e) {
+			e.printStackTrace();
+			// Handle any exceptions.
+		}
+	}
+	
 	public static void main(String args[]){
-		Account account1 = new Account();
-		account1.createAccount();
-	}	
-}
+		Bank bank1 = new Bank();
+		//bank1.createAccount();
+		
+		
+		Scanner input = new Scanner(System.in);
+		
+		String option;
+		do{
+			clearConsole();
+			System.out.println("-----------------------------------------------------------------------------------------------------------------");
+			System.out.println("|					WELCOME TO BANK SYSTEM					|");
+			System.out.println("-----------------------------------------------------------------------------------------------------------------");
+			
+			System.out.println("[1]  Create Account			[2]  Add New Student With Marks");
+			System.out.println("[3]  Add Marks				[4]  Update Student Details");
+			System.out.println("[5]  Update Marks			[6]  Delete Student");
+			System.out.println("[7]  Print Student Details		[8]  Print Student Rank");
+			System.out.println("[9]  Best in Programming Fundamentals	[10] Best in Database Management System");
+			
+			System.out.print("Enter an option to continue >");
+			option = input.nextLine();
+			
+			switch(option){
+				case "1": System.out.println("Your Option is [1]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|							CREATE NEW ACCOUNT						|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				bank1.createAccount(); try{Thread.sleep(2000);}catch(Exception ex){} break;
+				
+				case "2": System.out.println("Your Option is [2]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						VIEW ACCOUNT					|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				bank1.checkAccountUsingId(); try{Thread.sleep(2000);}catch(Exception ex){} break;
+				
+				case "3": System.out.println("Your Option is [3]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|							VIEW ACCOUNTS -> NIC						|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				bank1.checkAccountUsingNIC(); try{Thread.sleep(2000);}catch(Exception ex){} break;
+				
+				case "4": System.out.println("Your Option is [4]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						UPDATE STUDENT DETAILS						|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				//updateStudentDetails();break;
+				
+				case "5": System.out.println("Your Option is [5]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole();
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						UPDATE STUDENT MARKS						|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				//updateMarks(); break;
+				
+				case "6": System.out.println("Your Option is [6]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						DELETE STUDENT					|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");		
+				//deleteStudent(); break;
+				
+				case "7": System.out.println("Your Option is [7]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						PRINT STUDENT DETAILS					|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				//printStudentDetails(); break;
+				
+				case "8": System.out.println("Your Option is [8]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); break;
+				case "9": System.out.println("Your Option is [9]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						BEST IN PROGRAMMING FUNDAMENTALS					|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				//bestInPF();	break;
+				
+				case "10":System.out.println("Your Option is [10]");try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				System.out.println("|						BEST IN DATABASE MANAGEMENT SYSTEM					|");
+				System.out.println("-----------------------------------------------------------------------------------------------------------------");
+				//bestInDBMS(); break;
+				case "y": ; 
+				case "Y": return;
+				}
+			
+			}
+		while(true);
+		
+		}
+
+}	
