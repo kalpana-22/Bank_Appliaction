@@ -34,7 +34,9 @@ class Bank{
 	//create Accout-> option 1:
 	public void createAccount(){		
 		Account acc = new Account();
+		
 		System.out.print("Enter name: ");
+		
 		acc.name = scanner.nextLine();
 		
 		System.out.print("Enter date: ");
@@ -81,7 +83,7 @@ class Bank{
 	//search account -> ID
 	public boolean searchAccountId(int a_id){
 		for(Account a1:accounts){
-			if(a_id==a1.id){
+			if(a1.id==a_id){
 				return true;
 			}
 		}
@@ -96,16 +98,19 @@ class Bank{
 		}
 		return false;
 	}
+	
 	//print account numbers-> NIC
-	public void printAccountIds(String nic){
+	public void  printAccountIds(String nic){
+		int[] a = new int[30];
+		int b=0;
 		for(Account a1:accounts){
 			if(nic.equalsIgnoreCase(a1.NIC)){
-				//showAccoutId(nic);
+				a[b++]=a1.id;
 				System.out.println("Account Number: "+a1.id);
 			}
 		}
-		//System.out.println("Invalid NIC ");
 	}
+	
 	//show account ids related to NIC
 	public void showAccoutId(Account a1){
 		System.out.println("Account Number: "+a1.id);
@@ -124,17 +129,9 @@ class Bank{
 	//check Account related to NIC-> option :
 	public void checkAccountUsingNIC(){
 		System.out.print("Enter NIC number > ");
-		scanner.nextLine();
 		String number = scanner.nextLine();
 		if(searchAccountNIC(number)){
 			printAccountIds(number);
-			//int i=0; 
-			//while(i<accounts.length){
-			//	if(accounts[i].id==number){
-			//		showData(accounts[i]);
-			//	}
-			//	i++;
-			//}
 		}else{
 			System.out.println("no account");
 		}		
@@ -148,17 +145,93 @@ class Bank{
 			int i=0; 
 			while(i<accounts.length){
 				if(accounts[i].id==number){
-					showData(accounts[i]);
+					//showData(accounts[i]);
+					System.out.println("Account Number: "+accounts[i].id);
+					System.out.println("Name: "+accounts[i].name);
+					System.out.println("NIC : "+accounts[i].NIC);
+					System.out.println("Ammount: "+accounts[i].tot_amount);
+					System.out.println("Date Of Birth: "+accounts[i].date+"/"+accounts[i].month+"/"+accounts[i].year);
+					System.out.println("Address : "+accounts[i].address);	
 				}
 				i++;
 			}
 		}else{
-			System.out.println("no account");
-		}		
+			System.out.println("invalid account number");
+		}
+		scanner.nextLine();		
 	}
 	
+	//Deposite-> Option - 4:
+	public void deposite(){
+		System.out.print("Enter accout number > ");
+		int number = scanner.nextInt();
+		if(searchAccountId(number)){
+			System.out.print("Enter deposite amount > ");
+			int money = scanner.nextInt();
+			int i=0; 
+			while(i<accounts.length){
+				if(accounts[i].id==number){
+					accounts[i].tot_amount+=money;
+					System.out.println("Total Balance: "+accounts[i].tot_amount);
+				}
+				i++;
+			}
+		}else{
+			System.out.println("invalid account number");
+		}
+		scanner.nextLine();	
+	}
 	
+	//check account balnce withraw ammount
+	public void checkAmmount(Account acc){
+		int i=0; 
+		while(i<accounts.length){
+			if(accounts[i].id==acc.id){
+				System.out.println("Your Account Balance is Rs.: "+accounts[i].tot_amount);
+				System.out.print("How much do you want to withdraw > ");
+				int money = scanner.nextInt();
+				if((accounts[i].tot_amount-accounts[i].min_amount)>=money){
+					accounts[i].tot_amount-=accounts[i].min_amount;
+					System.out.println("Withdraw Successfuly.. Now Your Account Balance is Rs."+accounts[i].tot_amount);
+				}else{
+					System.out.print("Withdrawal Unsuccessfuly.. Try to withdraw again (y/n): ");
+					scanner.nextLine();
+					String answer = scanner.nextLine();
+					switch(answer){
+						case "n" :
+						case "N" : System.out.print("Welcome!"); break;
+						case "y" :
+						case "Y" : checkAmmount(acc); break;
+					}
+				}
+				break;
+			}
+		}
+	}
 	
+	//Withdraw-> Option - 5:
+	public void withdaw(){
+		System.out.print("Enter accout number > ");
+		int number = scanner.nextInt();
+		if(searchAccountId(number)){
+			int i=0; 
+			while(i<accounts.length){
+				if(accounts[i].id==number){
+					/*System.out.println("Your Account Balance is Rs.: "+accounts[i].tot_amount);
+					System.out.print("How much do you want to withdraw > ");
+					int money = scanner.nextInt();
+					if((accounts[i].tot_amount-accounts[i].min_amount)>=money){
+						
+					}*/
+					checkAmmount(accounts[i]);
+				}
+				i++;
+			}
+		}else{
+			System.out.println("invalid account number");
+		}
+		scanner.nextLine();	
+	}
 }
 
 class Demo{
@@ -193,9 +266,9 @@ class Demo{
 			System.out.println("|					WELCOME TO BANK SYSTEM					|");
 			System.out.println("-----------------------------------------------------------------------------------------------------------------");
 			
-			System.out.println("[1]  Create Account			[2]  Add New Student With Marks");
-			System.out.println("[3]  Add Marks				[4]  Update Student Details");
-			System.out.println("[5]  Update Marks			[6]  Delete Student");
+			System.out.println("[1]  Create Account			[2]  View Account");
+			System.out.println("[3]  View Account Using NIC		[4]  Deposite");
+			System.out.println("[5]  Withdrow			[6]  Delete Student");
 			System.out.println("[7]  Print Student Details		[8]  Print Student Rank");
 			System.out.println("[9]  Best in Programming Fundamentals	[10] Best in Database Management System");
 			
@@ -221,17 +294,17 @@ class Demo{
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
 				bank1.checkAccountUsingNIC(); try{Thread.sleep(2000);}catch(Exception ex){} break;
 				
-				case "4": System.out.println("Your Option is [4]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				case "4": System.out.println("Your Option is [4]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole(); 
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						UPDATE STUDENT DETAILS						|");
+				System.out.println("|						DEPOSITE						|");
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				//updateStudentDetails();break;
+				bank1.deposite(); try{Thread.sleep(2000);}catch(Exception ex){} break;
 				
-				case "5": System.out.println("Your Option is [5]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole();
+				case "5": System.out.println("Your Option is [5]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole();
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						UPDATE STUDENT MARKS						|");
+				System.out.println("|						WITHDRAW						|");
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				//updateMarks(); break;
+				bank1.withdaw(); try{Thread.sleep(2000);}catch(Exception ex){} break;
 				
 				case "6": System.out.println("Your Option is [6]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
