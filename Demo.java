@@ -22,8 +22,8 @@ class Bank{
 	Scanner scanner = new Scanner(System.in);
 
 	public int amountPolicy(int amount){
-		if(amount<=1000){
-			System.out.print("Deposite Amount should be more than Rs.1000/= ");
+		if(amount<1000){
+			System.out.print("Deposite Amount should be more than or equal Rs.1000/= ");
 			System.out.print("Deposite amount: ");
 			int deposite = scanner.nextInt();
 			amountPolicy(deposite);
@@ -64,7 +64,7 @@ class Bank{
 				
 				Account[] array = new Account[accounts.length+1];
 				for(int i=0; i<accounts.length; i++){
-					array[i] = accounts[0];
+					array[i] = accounts[i];
 				}
 				acc.id = acc_num++;
 				array[count++] = acc;
@@ -105,8 +105,9 @@ class Bank{
 		int b=0;
 		for(Account a1:accounts){
 			if(nic.equalsIgnoreCase(a1.NIC)){
-				a[b++]=a1.id;
-				System.out.println("Account Number: "+a1.id);
+				a[b]=a1.id;
+				System.out.println("Account Number: "+a[b]);
+				b++;
 			}
 		}
 	}
@@ -145,13 +146,13 @@ class Bank{
 			int i=0; 
 			while(i<accounts.length){
 				if(accounts[i].id==number){
-					//showData(accounts[i]);
-					System.out.println("Account Number: "+accounts[i].id);
+					showData(accounts[i]);
+					/*System.out.println("Account Number: "+accounts[i].id);
 					System.out.println("Name: "+accounts[i].name);
 					System.out.println("NIC : "+accounts[i].NIC);
 					System.out.println("Ammount: "+accounts[i].tot_amount);
 					System.out.println("Date Of Birth: "+accounts[i].date+"/"+accounts[i].month+"/"+accounts[i].year);
-					System.out.println("Address : "+accounts[i].address);	
+					System.out.println("Address : "+accounts[i].address);	*/
 				}
 				i++;
 			}
@@ -190,8 +191,9 @@ class Bank{
 				System.out.println("Your Account Balance is Rs.: "+accounts[i].tot_amount);
 				System.out.print("How much do you want to withdraw > ");
 				int money = scanner.nextInt();
+				//scanner.nextLine();
 				if((accounts[i].tot_amount-accounts[i].min_amount)>=money){
-					accounts[i].tot_amount-=accounts[i].min_amount;
+					accounts[i].tot_amount-=money;
 					System.out.println("Withdraw Successfuly.. Now Your Account Balance is Rs."+accounts[i].tot_amount);
 				}else{
 					System.out.print("Withdrawal Unsuccessfuly.. Try to withdraw again (y/n): ");
@@ -224,6 +226,36 @@ class Bank{
 						
 					}*/
 					checkAmmount(accounts[i]);
+				}
+				i++;
+			}
+		}else{
+			System.out.println("invalid account number");
+		}
+		scanner.nextLine();	
+	}
+	
+	public void removeAccount(){
+		System.out.print("Enter Account Number :");
+		int id = scanner.nextInt();
+		if(searchAccountId(id)){
+			int i=0; 
+			while(i<accounts.length){
+				if(accounts[i].id==id){
+					System.out.println("Account Number: "+accounts[i].id);
+					System.out.println("Name: "+accounts[i].name);
+					System.out.println("NIC : "+accounts[i].NIC);
+					System.out.println("Ammount: "+accounts[i].tot_amount);
+					System.out.println("Date Of Birth: "+accounts[i].date+"/"+accounts[i].month+"/"+accounts[i].year);
+					System.out.println("Address : "+accounts[i].address);
+					accounts[i].name = "***Closed***";
+					accounts[i].NIC = "***Closed***";
+					accounts[i].date = -1;
+					accounts[i].month = "***Closed***";
+					accounts[i].year = -1;
+					accounts[i].address = "***Closed***";
+					accounts[i].min_amount = -1;
+					accounts[i].tot_amount = -1;
 				}
 				i++;
 			}
@@ -268,9 +300,7 @@ class Demo{
 			
 			System.out.println("[1]  Create Account			[2]  View Account");
 			System.out.println("[3]  View Account Using NIC		[4]  Deposite");
-			System.out.println("[5]  Withdrow			[6]  Delete Student");
-			System.out.println("[7]  Print Student Details		[8]  Print Student Rank");
-			System.out.println("[9]  Best in Programming Fundamentals	[10] Best in Database Management System");
+			System.out.println("[5]  Withdrow				[6]  Remove Account");
 			
 			System.out.print("Enter an option to continue >");
 			option = input.nextLine();
@@ -306,30 +336,12 @@ class Demo{
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
 				bank1.withdaw(); try{Thread.sleep(2000);}catch(Exception ex){} break;
 				
-				case "6": System.out.println("Your Option is [6]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
+				case "6": System.out.println("Your Option is [6]"); try{Thread.sleep(2000);}catch(Exception ex){} clearConsole(); 
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						DELETE STUDENT					|");
+				System.out.println("|						RMOVE ACCOUNT					|");
 				System.out.println("-----------------------------------------------------------------------------------------------------------------");		
-				//deleteStudent(); break;
+				bank1.removeAccount(); try{Thread.sleep(2000);}catch(Exception ex){} break;
 				
-				case "7": System.out.println("Your Option is [7]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						PRINT STUDENT DETAILS					|");
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				//printStudentDetails(); break;
-				
-				case "8": System.out.println("Your Option is [8]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); break;
-				case "9": System.out.println("Your Option is [9]"); try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						BEST IN PROGRAMMING FUNDAMENTALS					|");
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				//bestInPF();	break;
-				
-				case "10":System.out.println("Your Option is [10]");try{Thread.sleep(1200);}catch(Exception ex){} clearConsole(); 
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				System.out.println("|						BEST IN DATABASE MANAGEMENT SYSTEM					|");
-				System.out.println("-----------------------------------------------------------------------------------------------------------------");
-				//bestInDBMS(); break;
 				case "y": ; 
 				case "Y": return;
 				}
