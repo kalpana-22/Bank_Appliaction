@@ -27,6 +27,7 @@ class Bank{
 			System.out.print("Deposite amount: ");
 			int deposite = scanner.nextInt();
 			amountPolicy(deposite);
+			return deposite;
 		}
 		return amount;
 	}
